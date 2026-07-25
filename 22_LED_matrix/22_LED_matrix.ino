@@ -1,8 +1,9 @@
 /*
-  예제 22. 내장 LED 매트릭스 직접 제어 (찰리플렉싱) - 좌표 순서로 이동
+  예제 22. 내장 LED 매트릭스 직접 제어 (찰리플렉싱) - 짝수/홀수 열 교대
   - 매트릭스는 11핀(D28~D38)으로 96개 LED(12열 x 8행)를 구동
-  - 찰리플렉싱은 한 번에 한 개만 켤 수 있다.
-  - 이 예제: 점 하나가 격자 좌표 순서(왼→오른쪽, 위→아래)로 이동
+  - 찰리플렉싱은 한 번에 한 개만 켤 수 있으므로, 한 열 그룹(48개)을
+    100ms 동안 빠르게 멀티플렉싱하여 "다 켜진 것처럼" 보이게 한다.
+  - 이 예제: 짝수 열(0,2,4,6,8,10) 100ms → 홀수 열(1,3,5,7,9,11) 100ms, 반복
 
   ※ pins[][2] = 각 LED의 {애노드 오프셋, 캐소드 오프셋}
     실제 아두이노 핀 번호 = 오프셋 + 28 (D28~D38)
@@ -50,16 +51,25 @@ int ledIndexAt(int x, int y) {
   return 32 * (j / 32) + 31 - (j % 32);  // 32개 블록마다 순서 반전
 }
 
+// parity(0=짝수 열, 1=홀수 열)에 해당하는 열들을 durationMs 동안 멀티플렉싱
+void showColumns(int parity, unsigned long durationMs) {
+  unsigned long t0 = millis();
+  while (millis() - t0 < durationMs) {
+    for (int x = parity; x < 12; x += 2) {   // 짝수 또는 홀수 열
+      for (int y = 0; y < 8; y++) {          // 해당 열의 8개 행
+        lightLed(ledIndexAt(x, y));
+        delayMicroseconds(200);              // 각 LED 점등 시간
+      }
+    }
+  }
+  allInput();                                // 그룹 끝나면 소등
+}
+
 void setup() {
   allInput();
 }
 
 void loop() {
-  // 점 하나가 좌표 순서로 이동: 왼→오른쪽(x), 위→아래(y)
-  for (int y = 0; y < 8; y++) {
-    for (int x = 0; x < 12; x++) {
-      lightLed(ledIndexAt(x, y));
-      delay(100);     // 각 LED를 0.1초씩 점등 (이동 속도 조절)
-    }
-  }
+  showColumns(0, 100);   // 짝수 열(0,2,4,6,8,10) 100ms
+  showColumns(1, 100);   // 홀수 열(1,3,5,7,9,11) 100ms
 }
