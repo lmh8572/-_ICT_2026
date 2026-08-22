@@ -3,7 +3,7 @@
   - 보드 → 브로커 → PC : 센서값(adc,volt) 발행/구독   (topic: .../data)
   - PC   → 브로커 → 보드 : 내장 LED 켜기/끄기 명령 발행/구독 (topic: .../led/set)
   - 보드 → 브로커 → PC : LED 적용 결과(상태) 발행/구독      (topic: .../led/state)
-  - 이 예제는 설치 없이 쓰는 공개 테스트 브로커(test.mosquitto.org)를 사용.
+  - 이 예제는 설치 없이 쓰는 공개 테스트 브로커(broker.hivemq.com)를 사용.
     (수업에서 여러 반이 동시에 쓰면 topic이 겹칠 수 있으니 BASE_TOPIC을 반별로 바꿔 쓰세요.)
   - 센서: 가변저항(가운데 핀 → A0), 양끝 → 5V / GND
 
@@ -25,7 +25,7 @@ MqttClient mqttClient(wifiClient);
 
 // ── MQTT 브로커 설정: 아래 둘 중 하나만 사용 ───────────────────────
 // [방식 1] 공개 테스트 브로커 — 설치 불필요, 인터넷만 되면 됨(값이 외부로 나감)
-const char broker[] = "test.mosquitto.org";
+const char broker[] = "broker.hivemq.com";   // 대안: "broker.emqx.io", "test.mosquitto.org"
 // [방식 2] 로컬 브로커(WSL의 mosquitto) — 아래 줄의 주석을 풀고 위 줄을 주석 처리.
 //          주소는 "Windows PC의 LAN IP"(ipconfig의 IPv4). 설정법은 README 2.4 참고.
 // const char broker[] = "192.168.0.10";

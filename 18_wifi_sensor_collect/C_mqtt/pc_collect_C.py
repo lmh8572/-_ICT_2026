@@ -26,8 +26,8 @@ import matplotlib.pyplot as plt
 import paho.mqtt.client as mqtt
 
 # ── 설정 ─────────────────────────────────────────────
-# [방식 1] 공개 브로커
-BROKER   = "test.mosquitto.org"
+# [방식 1] 공개 브로커  (보드 스케치의 broker[] 와 반드시 동일하게!)
+BROKER   = "broker.hivemq.com"   # 대안: "broker.emqx.io", "test.mosquitto.org"
 # [방식 2] 로컬 브로커(WSL): 이 수집기를 Windows에서 실행하면 보통 "localhost"
 #          (미러 네트워킹) 또는 포트프록시 설정 시에도 "localhost". 자세한 건 README 2.4.
 # BROKER   = "localhost"
